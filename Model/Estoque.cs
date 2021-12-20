@@ -7,18 +7,24 @@ namespace aula01Ambev.Model
     public class Estoque
     {
         public Guid id { get; set; }
-        public Produto produto { get; set; }
+        public Guid idProduto { get; set; }
         public int quantidade { get; set; }
+        public Guid idFilial {get; set;}
         public List<Estoque> estoques { get; set; }
 
-        public void CadastrarEstoque(Produto _produto, int _quantidade)
+        public void CadastrarEstoque(Guid _idProduto, Guid _idFilial, int _quantidade)
         {
-            if (BuscarEstoquePorProduto(_produto) != null)
+            //Estes dois métodos, na estrutura sugerida, acabariam sempre resultando em exceção, visto que
+            //uma instância nova de cada classe sempre vai retornar as listas de produtos e filiais zeradas
+            new Produto().BuscarProdutoPorId(_idProduto);
+            new Filiais().BuscarFilialPorId(_idFilial);
+            if (BuscarEstoquePorProduto(_idProduto, _idFilial) == null)
             {
                 estoques.Add(new Estoque()
                 {
                     id = Guid.NewGuid(),
-                    produto = _produto,
+                    idProduto = _idProduto,
+                    idFilial = _idFilial,
                     quantidade = _quantidade,
                 });
             }
@@ -28,23 +34,22 @@ namespace aula01Ambev.Model
         }
 
 
-        public void AtualizarEstoque(Produto _produto, int _quantidade)
+        public void AtualizarEstoque(Guid _idProduto, Guid _idFilial, int _quantidade)
         {
-            var estoque = BuscarEstoquePorProduto(_produto);
+            var estoque = BuscarEstoquePorProduto(_idProduto, _idFilial);
             if (estoque != null)
             {
-                estoque.produto = _produto;
                 estoque.quantidade = _quantidade;
             }
             else
             {
-                CadastrarEstoque(_produto, _quantidade);
+                throw new Exception("Não existe estoque para este produto nesta filial, favor cadastrar");
             }
         }
 
-        public void DiminuirEstoque(Produto _produto, int _quantidadeADiminuir)
+        public void DiminuirEstoque(Guid _idProduto, Guid _idFilial, int _quantidadeADiminuir)
         {
-            var estoque = BuscarEstoquePorProduto(_produto);
+            var estoque = BuscarEstoquePorProduto(_idProduto, _idFilial);
             if (estoque.quantidade >= _quantidadeADiminuir)
             {
                 estoque.quantidade = estoque.quantidade - _quantidadeADiminuir;
@@ -55,9 +60,9 @@ namespace aula01Ambev.Model
             }
         }
 
-        public Estoque BuscarEstoquePorProduto(Produto _produto)
+        public Estoque BuscarEstoquePorProduto(Guid _idProduto, Guid _idFilial)
         {
-            return estoques.FirstOrDefault(p => p.produto == _produto);
+            return estoques.FirstOrDefault(p => p.idProduto == _idProduto && p.idFilial == _idFilial);
         }
     }
 }

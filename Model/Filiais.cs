@@ -24,20 +24,21 @@ namespace aula01Ambev.Model
         public void AtualizarFilial(string novoNome, Endereco novoEndereco, Guid _id)
         {
             var filial = BuscarFilialPorId(_id);
+            filial.nome = novoNome;
+            filial.endereco = novoEndereco;
+        }
+
+        public Filiais BuscarFilialPorId(Guid _id)
+        {
+            var filial = filiais.FirstOrDefault(x => x.id == _id);
             if (filial != null)
             {
-                filial.nome = novoNome;
-                filial.endereco = novoEndereco;
+                return filial;
             }
             else
             {
                 throw new Exception("Não foi possível localizar uma filial com este Id");
             }
-        }
-
-        public Filiais BuscarFilialPorId(Guid _id)
-        {
-            return filiais.FirstOrDefault(x => x.id == id);
         }
 
         public Filiais BuscarFilialPorNome(string _nome)

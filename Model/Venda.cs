@@ -8,17 +8,19 @@ namespace aula01Ambev.Model
     {
         public Guid id { get; set; }
         public int quantidade { get; set; }
-        public Pessoa? cliente { get; set; }
-        public Produto produto { get; set; }
+        public Guid? idCliente { get; set; }
+        public Guid idProduto { get; set; }
+        public Guid idFilial { get; set; }
         public List<Venda> vendas { get; set; }
-        public void RegistrarVenda(int _quantidade, Produto _produto, Pessoa _cliente = null, Estoque estoque)
+        public void RegistrarVenda(int _quantidade, Guid _idFilial, Guid _idProduto, Estoque estoque, Guid? _idCliente = null)
         {
-            estoque.DiminuirEstoque(_produto, quantidade);
+            estoque.DiminuirEstoque(_idProduto, _idFilial, quantidade);
             vendas.Add(new Venda()
             {
                 id = Guid.NewGuid(),
-                cliente = _cliente,
-                produto = _produto,
+                idCliente = _idCliente,
+                idProduto = _idProduto,
+                idFilial = _idFilial,
                 quantidade = _quantidade,
             });
         }
@@ -30,7 +32,7 @@ namespace aula01Ambev.Model
 
         public Venda BuscarVendaPorCliente(Guid _clienteId)
         {
-            return vendas.FirstOrDefault(x => x.cliente.id == _clienteId);
+            return vendas.FirstOrDefault(x => x.idCliente == _clienteId);
         }
     }
 }
