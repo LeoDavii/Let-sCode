@@ -15,7 +15,7 @@ namespace aula01Ambev.Model
         public void CadastrarPJ(string _nome, string _documento, Endereco _endereco, string _telefone, string _email, string _nomeSocial = null)
         {
             VerificaDocumento(_documento);
-            if (BuscarClientePorDocumento(_documento) != null)
+            if (BuscarClientePorDocumento(_documento) == null)
             {
                 var pessoa = new ClientePJ()
                 {
@@ -35,6 +35,8 @@ namespace aula01Ambev.Model
             }
         }
         
+        // Estamos recebendo um objeto tipado com a classe ClientePJ, mas entendemos que num fluxo mais complexo a atualização
+        // não deveria permitir a alteração de todos os dados, como o id por exemplo, e passaria por mais validações
         public void AtualizarPJ(Guid _id, ClientePJ _cadastroAtualizado)
         {
             var cliente = BuscarClientePorId(_id);
