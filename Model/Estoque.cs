@@ -13,13 +13,20 @@ namespace aula01Ambev.Model
 
         public void CadastrarEstoque(Produto _produto, int _quantidade)
         {
-            estoques.Add(new Estoque()
+            if (BuscarEstoquePorProduto(_produto) != null)
             {
-                id = Guid.NewGuid(),
-                produto = _produto,
-                quantidade = _quantidade,
-            });
+                estoques.Add(new Estoque()
+                {
+                    id = Guid.NewGuid(),
+                    produto = _produto,
+                    quantidade = _quantidade,
+                });
+            }
+            else {
+                throw new Exception("Já existe estoque cadastrado para este produto");
+            }
         }
+
 
         public void AtualizarEstoque(Produto _produto, int _quantidade)
         {
